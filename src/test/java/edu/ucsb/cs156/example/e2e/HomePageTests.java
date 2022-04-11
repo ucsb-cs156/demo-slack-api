@@ -29,9 +29,7 @@ import com.microsoft.playwright.Playwright;
 import org.springframework.context.annotation.FilterType;
 
 @Testcontainers
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "edu\\.ucsb\\.cs156\\.example\\.testconfig\\..*"))
 public class HomePageTests {
 
 	@LocalServerPort
