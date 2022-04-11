@@ -4,7 +4,6 @@ import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import springfox.documentation.service.Contact;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -43,7 +42,7 @@ public class SpringFoxConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("demo-spring-react-example-v2", "<a href=\"/\">home</a>", null, null, null, null, null, Collections.EMPTY_LIST);
+        return new ApiInfo("demo-spring-react-example", "<a href=\"/\">home</a>", null, null, null, null, null, Collections.EMPTY_LIST);
     }
 
 }

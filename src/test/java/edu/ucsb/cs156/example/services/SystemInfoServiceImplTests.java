@@ -18,7 +18,6 @@ import edu.ucsb.cs156.example.models.SystemInfo;
 // The unit under test relies on property values
 // For hints on testing, see: https://www.baeldung.com/spring-boot-testing-configurationproperties
 
-
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = SystemInfoServiceImpl.class)
 @TestPropertySource("classpath:application-development.properties")

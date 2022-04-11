@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Profile("development")
+@Profile("!production")
 @Api(description = "CSRF (enabled only in development; can be used with Postman to test APIs)")
 @RestController
 public class CSRFController {

@@ -21,10 +21,14 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.showSwaggerUILink:false}")
   private boolean showSwaggerUILink;
 
+  @Value("${spring.profiles.active:Unknown}")
+  private String activeProfiles;
+
   public SystemInfo getSystemInfo() {
     SystemInfo si = SystemInfo.builder()
     .springH2ConsoleEnabled(this.springH2ConsoleEnabled)
     .showSwaggerUILink(this.showSwaggerUILink)
+    .activeProfiles(this.activeProfiles)
     .build();
   log.info("getSystemInfo returns {}",si);
   return si;

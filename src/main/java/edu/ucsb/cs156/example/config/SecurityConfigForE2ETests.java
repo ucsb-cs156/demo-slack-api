@@ -31,31 +31,37 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import edu.ucsb.cs156.example.entities.User;
-import edu.ucsb.cs156.example.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
-@Profile("!e2etests")
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+@Profile("e2etests")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Slf4j
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfigForE2ETests extends WebSecurityConfigurerAdapter {
 
   @Value("${app.admin.emails}")
   private final List<String> adminEmails = new ArrayList<String>();
 
-  @Autowired
-  UserRepository userRepository;
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests(authorize -> authorize
-        .anyRequest().permitAll())
+    http
+        .authorizeRequests(authorize -> authorize
+            .anyRequest().permitAll())
         .exceptionHandling(handlingConfigurer -> handlingConfigurer
             .authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
-        .oauth2Login(
-            oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userAuthoritiesMapper(this.userAuthoritiesMapper())))
+        .formLogin()
+        .loginPage("/login")
+        .permitAll()
+        .and()
         .csrf(csrf -> csrf
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
         .logout(logout -> logout
@@ -63,44 +69,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/"));
   }
 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  @Override
+  public UserDetailsService userDetailsService() {
+
+    List<UserDetails> userDetailsList = new ArrayList<>();
+    userDetailsList.add(User.withUsername("user").password(passwordEncoder().encode("cs156"))
+        .roles("USER").build());
+    userDetailsList.add(User.withUsername("admin").password(passwordEncoder().encode("cs156"))
+        .roles("USER", "ADMIN").build());
+
+    return new InMemoryUserDetailsManager(userDetailsList);
+
+  }
+
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers("/h2-console/**");
   }
 
-  private GrantedAuthoritiesMapper userAuthoritiesMapper() {
-    return (authorities) -> {
-      Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-
-      authorities.forEach(authority -> {
-        log.info("********** authority={}", authority);
-        mappedAuthorities.add(authority);
-        if (OAuth2UserAuthority.class.isInstance(authority)) {
-          OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority) authority;
-
-          Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
-          log.info("********** userAttributes={}", userAttributes);
-
-          String email = (String) userAttributes.get("email");
-          if (isAdmin(email)) {
-            mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-          }
-
-          if (email.endsWith("@ucsb.edu")) {
-            mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
-          }
-        }
-
-      });
-      return mappedAuthorities;
-    };
-  }
-
   public boolean isAdmin(String email) {
-    if (adminEmails.contains(email)) {
-      return true;
-    }
-    Optional<User> u = userRepository.findByEmail(email);
-    return u.isPresent() && u.get().isAdmin();
+    return (adminEmails.contains(email));
   }
 }

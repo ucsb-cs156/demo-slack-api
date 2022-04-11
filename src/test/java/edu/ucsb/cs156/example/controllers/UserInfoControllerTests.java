@@ -23,11 +23,6 @@ public class UserInfoControllerTests extends ControllerTestCase {
   @MockBean
   UserRepository userRepository;
 
-  @Test
-  public void currentUser__logged_out() throws Exception {
-    mockMvc.perform(get("/api/currentUser"))
-        .andExpect(status().is(403));
-  }
 
   @WithMockUser(roles = { "USER" })
   @Test

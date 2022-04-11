@@ -2,6 +2,7 @@ import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { hasRole } from "main/utils/currentUser";
 import AppNavbarLocalhost from "main/components/Nav/AppNavbarLocalhost"
+import LoginLogoutButton from "./LoginLogoutButton";
 
 export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUrl = window.location.href }) {
   return (
@@ -93,19 +94,8 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
             </Nav>
-
-            <Nav className="ml-auto">
-              {
-                currentUser && currentUser.loggedIn ? (
-                  <>
-                    <Navbar.Text className="me-3" as={Link} to="/profile">Welcome, {currentUser.root.user.email}</Navbar.Text>
-                    <Button onClick={doLogout}>Log Out</Button>
-                  </>
-                ) : (
-                  <Button href="/oauth2/authorization/google">Log In</Button>
-                )
-              }
-            </Nav>
+            <LoginLogoutButton currentUser={currentUser} systemInfo={systemInfo} doLogout={doLogout} />
+           
           </Navbar.Collapse>
         </Container >
       </Navbar >

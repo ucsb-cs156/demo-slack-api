@@ -1,37 +1,18 @@
 
 import React from 'react';
-import AppNavbar from "main/components/Nav/AppNavbar";
+
 import { currentUserFixtures } from "fixtures/currentUserFixtures"
+import LoginLogoutButton from "main/components/Nav/LoginLogoutButton";
 
 export default {
-    title: 'components/Nav/AppNavbar',
-    component: AppNavbar
+    title: 'components/Nav/LoginLogoutButton',
+    component: LoginLogoutButton
 };
-
 
 const Template = (args) => {
     return (
-        <AppNavbar {...args} />
+        <LoginLogoutButton {...args} />
     )
-};
-
-export const localhost3000 = Template.bind({});
-localhost3000.args = {
-    currentUrl: "http://localhost:3000",
-    systemInfo: { activeProfile: "production" }
-};
-
-export const localhostNumeric3000 = Template.bind({});
-localhostNumeric3000.args = {
-    currentUrl: "http://127.0.0.1:3000",
-    systemInfo: { activeProfile: "production" }
-
-};
-
-export const localhost8080 = Template.bind({});
-localhost8080.args = {
-    currentUrl: "http://localhost:8080",
-    systemInfo: { activeProfile: "production" }
 };
 
 export const productionLoggedOut = Template.bind({});
@@ -55,5 +36,3 @@ e2eTestsLoggedIn.args = {
     systemInfo: { activeProfile: "e2etests" },
     currentUser: currentUserFixtures.adminUser
 };
-
-

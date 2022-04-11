@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,10 +21,13 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-
 @Slf4j
 @Service("currentUser")
 public class CurrentUserServiceImpl extends CurrentUserService {
+
+  @Value("${spring.profiles.active:Unknown}")
+  private String activeProfile;
+
   @Autowired
   private UserRepository userRepository;
 
@@ -35,14 +39,13 @@ public class CurrentUserServiceImpl extends CurrentUserService {
 
   public CurrentUser getCurrentUser() {
     CurrentUser cu = CurrentUser.builder()
-      .user(this.getUser())
-      .roles(this.getRoles())
-      .build();
-    log.info("getCurrentUser returns {}",cu);
+        .user(this.getUser())
+        .roles(this.getRoles())
+        .build();
+    log.info("getCurrentUser returns {}", cu);
     return cu;
   }
 
-  
   public User getOAuth2AuthenticatedUser(SecurityContext securityContext, Authentication authentication) {
     OAuth2User oAuthUser = ((OAuth2AuthenticationToken) authentication).getPrincipal();
     String email = oAuthUser.getAttribute("email");
@@ -55,8 +58,8 @@ public class CurrentUserServiceImpl extends CurrentUserService {
     String locale = oAuthUser.getAttribute("locale");
     String hostedDomain = oAuthUser.getAttribute("hd");
 
-    java.util.Map<java.lang.String,java.lang.Object> attrs = oAuthUser.getAttributes();
-    log.info("attrs={}",attrs);
+    java.util.Map<java.lang.String, java.lang.Object> attrs = oAuthUser.getAttributes();
+    log.info("attrs={}", attrs);
 
     Optional<User> ou = userRepository.findByEmail(email);
     if (ou.isPresent()) {
@@ -80,7 +83,29 @@ public class CurrentUserServiceImpl extends CurrentUserService {
         .hostedDomain(hostedDomain)
         .admin(adminEmails.contains(email))
         .build();
-    userRepository.save(u);
+
+    return u;
+  }
+
+  public User getFakeE2ETestsUser(SecurityContext securityContext, Authentication authentication) {
+
+    UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+
+    org.springframework.security.core.userdetails.User user = 
+    (org.springframework.security.core.userdetails.User) token.getPrincipal();
+
+    User u = null;
+    
+    if (user.getUsername().equals("user")) {
+       u = fakeUser();
+    } else if (user.getUsername().equals("admin")) {
+      u = fakeAdminUser();
+    } else {
+      return null;
+    }
+    Optional<User> lookupUser = userRepository.findByEmail(u.getEmail());
+    if (lookupUser.isEmpty())
+      userRepository.save(u);
     return u;
   }
 
@@ -91,10 +116,45 @@ public class CurrentUserServiceImpl extends CurrentUserService {
     if (authentication instanceof OAuth2AuthenticationToken) {
       return getOAuth2AuthenticatedUser(securityContext, authentication);
     }
+
+    if (activeProfile.equals("e2etests") && authentication instanceof UsernamePasswordAuthenticationToken) {
+      return getFakeE2ETestsUser(securityContext, authentication);
+    }
+
     return null;
   }
 
   public Collection<? extends GrantedAuthority> getRoles() {
-   return grantedAuthoritiesService.getGrantedAuthorities();
+    return grantedAuthoritiesService.getGrantedAuthorities();
+  }
+
+  public User fakeUser() {
+    return User.builder()
+        .googleSub("0")
+        .email("user@example.org")
+        .pictureUrl("")
+        .fullName("Fake User")
+        .givenName("Fake")
+        .familyName("User")
+        .emailVerified(true)
+        .locale("en")
+        .hostedDomain("example.org")
+        .admin(false)
+        .build();
+  }
+
+  public User fakeAdminUser() {
+    return User.builder()
+        .googleSub("0")
+        .email("admin@example.org")
+        .pictureUrl("")
+        .fullName("Fake Admin")
+        .givenName("Fake")
+        .familyName("Admin")
+        .emailVerified(true)
+        .locale("en")
+        .hostedDomain("example.org")
+        .admin(true)
+        .build();
   }
 }

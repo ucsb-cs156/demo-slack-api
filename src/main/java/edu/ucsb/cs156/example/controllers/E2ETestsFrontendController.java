@@ -1,21 +1,16 @@
 package edu.ucsb.cs156.example.controllers;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Profile("production")
+@Profile("e2etests")
 @Controller
-public class FrontendController {
+public class E2ETestsFrontendController {
+
   @GetMapping("/**/{path:[^\\.]*}")
   public String index() {
     return "forward:/index.html";
-  }
-
-  @GetMapping("/csrf")
-  public ResponseEntity<String> csrf() {
-    return ResponseEntity.notFound().build();
   }
 
 }

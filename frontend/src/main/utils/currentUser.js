@@ -13,7 +13,8 @@ export function useCurrentUser() {
         console.error("Error getting roles: ", e);
       }
       response.data = { ...response.data, rolesList: rolesList }
-      return { loggedIn: true, root: response.data };
+      const loggedIn = (response.data.user !== null)
+      return { loggedIn: loggedIn, root: response.data };
     } catch (e) {
       console.error("Error invoking axios.get: ", e);
       return { loggedIn: false, root: null };
