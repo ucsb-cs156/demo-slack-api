@@ -1,61 +1,28 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { studentFixtures } from "fixtures/studentFixtures";
 import StudentsTable from "main/components/Students/StudentsTable"
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import { currentUserFixtures } from "fixtures/currentUserFixtures";
-
 
 describe("StudentsTable tests", () => {
   const queryClient = new QueryClient();
 
-  test("renders without crashing for empty table with user not logged in", () => {
-    const currentUser = null;
-
+  test("renders without crashing for empty table", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <StudentsTable students={[]} currentUser={currentUser} />
+          <StudentsTable students={[]} />
         </MemoryRouter>
       </QueryClientProvider>
 
     );
   });
 
-  test("renders without crashing for empty table for ordinary user", () => {
-    const currentUser = currentUserFixtures.userOnly;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <StudentsTable students={[]} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-
-    );
-  });
-
-  test("renders without crashing for empty table for admin", () => {
-    const currentUser = currentUserFixtures.adminUser;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <StudentsTable students={[]} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-
-    );
-  });
-
-  test("Has the expected colum headers and content for adminUser", () => {
-
-    const currentUser = currentUserFixtures.adminUser;
-
+  test("Has the expected colum headers and content", () => {
     const { getByText, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <StudentsTable students={studentFixtures.twoStudents} currentUser={currentUser} />
+          <StudentsTable students={studentFixtures.twoStudents} />
         </MemoryRouter>
       </QueryClientProvider>
 

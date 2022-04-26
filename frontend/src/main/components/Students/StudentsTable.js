@@ -1,8 +1,7 @@
-import React from "react";
+import { useMemo } from "react";
 import OurTable from "main/components/OurTable";
 
-export default function StudentsTable({ students, currentUser }) {
-
+export default function StudentsTable({ students }) {
     const columns = [
         {
             Header: 'id',
@@ -22,14 +21,12 @@ export default function StudentsTable({ students, currentUser }) {
         }
     ];
 
-    // Stryker disable ArrayDeclaration : [columns] and [students] are performance optimization; mutation preserves correctness
-    const memoizedColumns = React.useMemo(() => columns, [columns]);
-    const memoizedDates = React.useMemo(() => students, [students]);
-    // Stryker enable ArrayDeclaration
+    // Stryker disable next-line ArrayDeclaration : [students] is a performance optimization
+    const memoizedDates = useMemo(() => students, [students]);
 
     return <OurTable
         data={memoizedDates}
-        columns={memoizedColumns}
+        columns={columns}
         testid={"StudentsTable"}
     />;
 };

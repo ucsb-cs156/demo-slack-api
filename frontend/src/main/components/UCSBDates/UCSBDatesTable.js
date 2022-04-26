@@ -1,6 +1,5 @@
-import React from "react";
+import { useMemo } from "react";
 import OurTable, { ButtonColumn } from "main/components/OurTable";
-// import { toast } from "react-toastify";
 import { useBackendMutation } from "main/utils/useBackend";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/UCSBDateUtils"
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ export default function UCSBDatesTable({ dates, currentUser }) {
     }
 
     // Stryker disable all : hard to test for query caching
-
     const deleteMutation = useBackendMutation(
         cellToAxiosParamsDelete,
         { onSuccess: onDeleteSuccess },
@@ -25,7 +23,6 @@ export default function UCSBDatesTable({ dates, currentUser }) {
 
     // Stryker disable next-line all : TODO try to make a good test for this
     const deleteCallback = async (cell) => { deleteMutation.mutate(cell); }
-
 
     const columns = [
         {
@@ -46,18 +43,22 @@ export default function UCSBDatesTable({ dates, currentUser }) {
         }
     ];
 
-    if (hasRole(currentUser, "ROLE_ADMIN")) {
-        columns.push(ButtonColumn("Edit", "primary", editCallback, "UCSBDatesTable"));
-        columns.push(ButtonColumn("Delete", "danger", deleteCallback, "UCSBDatesTable"));
-    } 
+    const columnsIfAdmin = [
+        ...columns,
+        ButtonColumn("Edit", "primary", editCallback, "UCSBDatesTable"),
+        ButtonColumn("Delete", "danger", deleteCallback, "UCSBDatesTable")
+    ]
 
-    // Stryker disable next-line ArrayDeclaration : [columns] is a performance optimization
-    const memoizedColumns = React.useMemo(() => columns, [columns]);
-    const memoizedDates = React.useMemo(() => dates, [dates]);
+    const columnsToDisplay = () => {
+        return hasRole(currentUser, "ROLE_ADMIN") ? columnsIfAdmin : columns;
+    }
+
+    // Stryker disable next-line ArrayDeclaration : [dates] is a performance optimization
+    const memoizedDates = useMemo(() => dates, [dates]);
 
     return <OurTable
         data={memoizedDates}
-        columns={memoizedColumns}
+        columns={columnsToDisplay()}
         testid={"UCSBDatesTable"}
     />;
 };
