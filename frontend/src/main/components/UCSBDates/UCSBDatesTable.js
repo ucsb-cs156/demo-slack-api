@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import OurTable, { ButtonColumn } from "main/components/OurTable";
 import { useBackendMutation } from "main/utils/useBackend";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/UCSBDateUtils"
@@ -47,18 +46,13 @@ export default function UCSBDatesTable({ dates, currentUser }) {
         ...columns,
         ButtonColumn("Edit", "primary", editCallback, "UCSBDatesTable"),
         ButtonColumn("Delete", "danger", deleteCallback, "UCSBDatesTable")
-    ]
+    ];
 
-    const columnsToDisplay = () => {
-        return hasRole(currentUser, "ROLE_ADMIN") ? columnsIfAdmin : columns;
-    }
-
-    // Stryker disable next-line ArrayDeclaration : [dates] is a performance optimization
-    const memoizedDates = useMemo(() => dates, [dates]);
+    const columnsToDisplay = hasRole(currentUser, "ROLE_ADMIN") ? columnsIfAdmin : columns;
 
     return <OurTable
-        data={memoizedDates}
-        columns={columnsToDisplay()}
+        data={dates}
+        columns={columnsToDisplay}
         testid={"UCSBDatesTable"}
     />;
 };

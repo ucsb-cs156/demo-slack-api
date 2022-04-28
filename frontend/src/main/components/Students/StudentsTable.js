@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import OurTable from "main/components/OurTable";
 
 export default function StudentsTable({ students }) {
@@ -21,11 +20,8 @@ export default function StudentsTable({ students }) {
         }
     ];
 
-    // Stryker disable next-line ArrayDeclaration : [students] is a performance optimization
-    const memoizedDates = useMemo(() => students, [students]);
-
     return <OurTable
-        data={memoizedDates}
+        data={students}
         columns={columns}
         testid={"StudentsTable"}
     />;
