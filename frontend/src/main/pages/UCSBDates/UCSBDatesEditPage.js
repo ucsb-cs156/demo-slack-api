@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 export default function UCSBDatesEditPage() {
   let { id } = useParams();
 
-  const { data: ucsbDate, error: error, status: status } =
+  const { data: ucsbDate } =
     useBackend(
       // Stryker disable next-line all : don't test internal caching of React Query
       [`/api/ucsbdates?id=${id}`],
@@ -20,7 +20,6 @@ export default function UCSBDatesEditPage() {
         }
       }
     );
-
 
   const objectToAxiosPutParams = (ucsbDate) => ({
     url: "/api/ucsbdates",
