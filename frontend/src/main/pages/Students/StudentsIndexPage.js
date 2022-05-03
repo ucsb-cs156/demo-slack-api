@@ -13,6 +13,7 @@ export default function StudentsIndexPage() {
     useBackend(
       // Stryker disable next-line all : don't test internal caching of React Query
       ["/api/students/all"],
+       // Stryker disable next-line StringLiteral : "GET" is the default, so removing it is equivalent
       { method: "GET", url: "/api/students/all" },
       []
     );
