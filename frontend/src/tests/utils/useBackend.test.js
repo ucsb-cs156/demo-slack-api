@@ -41,7 +41,6 @@ describe("utils/useBackend tests", () => {
 
             const { result, waitFor } = renderHook(() => useBackend(
                 ["/api/admin/users"],
-                // Stryker disable next-line StringLiteral : "GET" is the default, so removing it is equivalent
                 { method: "GET", url: "/api/admin/users" },
                 ["initialData"]
             ), { wrapper });
