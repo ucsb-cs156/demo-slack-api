@@ -44,11 +44,18 @@ describe("UCSBDatesEditPage tests", () => {
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
             axiosMock.onGet("/api/ucsbdates", { params: { id: 17 } }).timeout();
+
+            jest.spyOn(console, 'error')
+            console.error.mockImplementation(() => null);
         });
+
+        afterEach(() => {
+            console.error.mockRestore()
+        })
 
         const queryClient = new QueryClient();
         test("renders header but table is not present", async () => {
-            const {getByText, queryByTestId} = render(
+            const { getByText, queryByTestId } = render(
                 <QueryClientProvider client={queryClient}>
                     <MemoryRouter>
                         <UCSBDatesEditPage />
@@ -164,7 +171,7 @@ describe("UCSBDatesEditPage tests", () => {
 
         });
 
-       
+
     });
 });
 
