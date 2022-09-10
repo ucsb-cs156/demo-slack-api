@@ -1,8 +1,8 @@
 # demo-slack-api
 
 Storybook is here:
-* Production: <https://ucsb-cs156-s22.github.io/demo-slack-api-docs/>
-* QA:  <https://ucsb-cs156-s22.github.io/demo-slack-api-docs-qa/>
+* Production: <https://ucsb-cs156.github.io/demo-slack-api-docs/>
+* QA:  <https://ucsb-cs156.github.io/demo-slack-api-docs-qa/>
 
 The GitHub actions script to deploy the Storybook to QA requires some configuration; see [docs/github-actions.md](docs/github-actions.md) for details.
 
