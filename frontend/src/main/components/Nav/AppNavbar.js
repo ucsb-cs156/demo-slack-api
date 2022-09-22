@@ -49,8 +49,8 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
               }
               {
                 hasRole(currentUser, "ROLE_ADMIN") && (
-                  <NavDropdown title="Slack" id="appnavbar-todos-dropdown" data-testid="appnavbar-todos-dropdown" >
-                    <NavDropdown.Item as={Link} to="/channels/list">List Todos</NavDropdown.Item>
+                  <NavDropdown title="Slack" id="appnavbar-slack-dropdown" data-testid="appnavbar-slack-dropdown" >
+                    <NavDropdown.Item as={Link} to="/channels/list">List Channels</NavDropdown.Item>
                   </NavDropdown>
                 )
               }

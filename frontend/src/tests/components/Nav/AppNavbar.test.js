@@ -146,6 +146,25 @@ describe("AppNavbar tests", () => {
         expect(queryByTestId(/AppNavbarLocalhost/i)).toBeNull();
     });
 
+    test("renders the slack menu correctly for admin user", async () => {
+
+        const currentUser = currentUserFixtures.adminUser;
+        const systemInfo = systemInfoFixtures.showingBoth;
+
+        const doLogin = jest.fn();
+
+        const {getByTestId } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} systemInfo={systemInfo} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(getByTestId("appnavbar-slack-dropdown")).toBeInTheDocument());
+    });
+
+
 });
 
 
