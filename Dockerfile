@@ -18,6 +18,5 @@ RUN npm --version
 
 COPY src /home/app/src
 COPY pom.xml /home/app
-EXPOSE 8080
 RUN mvn -f /home/app/pom.xml clean spring-boot:run
 
