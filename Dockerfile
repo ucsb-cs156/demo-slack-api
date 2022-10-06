@@ -1,4 +1,4 @@
-FROM maven:3.8.4-openjdk-17
+FROM bellsoft/liberica-openjdk-alpine:17.0.2
 
 WORKDIR /app
 
