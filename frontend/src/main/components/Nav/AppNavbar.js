@@ -14,7 +14,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
       <Navbar expand="xl" variant="dark" bg="dark" sticky="top" data-testid="AppNavbar">
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Example
+            Slack Tool
           </Navbar.Brand>
 
           <Navbar.Toggle />
@@ -48,34 +48,9 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
               {
-                hasRole(currentUser, "ROLE_USER") && (
-                  <NavDropdown title="Todos" id="appnavbar-todos-dropdown" data-testid="appnavbar-todos-dropdown" >
-                    <NavDropdown.Item as={Link} to="/todos/list">List Todos</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/todos/create">Create Todo</NavDropdown.Item>
-                  </NavDropdown>
-                )
-              }
-              {
-                hasRole(currentUser, "ROLE_USER") && (
-                  <NavDropdown title="Students" id="appnavbar-students-dropdown" data-testid="appnavbar-students-dropdown" >
-                    <NavDropdown.Item as={Link} to="/students/list" data-testid="appnavbar-students-list">List</NavDropdown.Item>
-                    {
-                      hasRole(currentUser, "ROLE_ADMIN") && (
-                        <NavDropdown.Item as={Link} to="/students/create" data-testid="appnavbar-students-create">Create</NavDropdown.Item>
-                      )
-                    }
-                  </NavDropdown>
-                )
-              }
-              {
-                hasRole(currentUser, "ROLE_USER") && (
-                  <NavDropdown title="UCSBDates" id="appnavbar-ucsbdates-dropdown" data-testid="appnavbar-ucsbdates-dropdown" >
-                    <NavDropdown.Item as={Link} to="/ucsbdates/list" data-testid="appnavbar-ucsbdates-list">List</NavDropdown.Item>
-                    {
-                      hasRole(currentUser, "ROLE_ADMIN") && (
-                        <NavDropdown.Item as={Link} to="/ucsbdates/create" data-testid="appnavbar-ucsbdates-create">Create</NavDropdown.Item>
-                      )
-                    }
+                hasRole(currentUser, "ROLE_ADMIN") && (
+                  <NavDropdown title="Slack" id="appnavbar-slack-dropdown" data-testid="appnavbar-slack-dropdown" >
+                    <NavDropdown.Item as={Link} to="/channels/list">List Channels</NavDropdown.Item>
                   </NavDropdown>
                 )
               }
