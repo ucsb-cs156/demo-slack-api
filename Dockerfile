@@ -15,4 +15,8 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
 
-CMD ["/bin/bash"]
+COPY src /home/app/src
+COPY pom.xml /home/app
+EXPOSE 8080
+RUN mvn -f /home/app/pom.xml clean spring-boot:run
+
