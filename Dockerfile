@@ -6,6 +6,7 @@ WORKDIR /app
 ENV NODE_VERSION=14.17.3
 RUN apk add curl
 RUN apk add bash
+RUN apk add maven
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
@@ -18,5 +19,5 @@ RUN npm --version
 COPY src /home/app/src
 COPY pom.xml /home/app
 EXPOSE 8080
-RUN mvn -f /home/app/pom.xml clean spring-boot:run
+RUN ./mvnw -f /home/app/pom.xml clean spring-boot:run
 
